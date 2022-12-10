@@ -1,0 +1,44 @@
+{{- $portName := include "syntheticapi.portName" . -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: network-policy-test-dep
+  namespace: {{ .Values.namespace}}
+  labels:
+    {{- include "syntheticapi.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "syntheticapi.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "syntheticapi.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+          - pwsh
+          - /c
+          - echo 'starting'; Invoke-RestMethod https://official-joke-api.appspot.com/random_joke; echo 'going to sleep'; start-sleep -s 600;
+          ports:
+            - name: {{ $portName }}
+              containerPort: 80
+              protocol: TCP
+          env:
+            {{- toYaml .Values.env | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
