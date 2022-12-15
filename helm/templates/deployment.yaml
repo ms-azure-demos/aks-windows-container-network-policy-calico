@@ -27,7 +27,7 @@ spec:
           args:
           - pwsh
           - /c
-          - echo 'starting'; Invoke-RestMethod https://official-joke-api.appspot.com/random_joke; echo 'going to sleep'; start-sleep -s 600;
+          - echo 'starting'; curl https://joymon.github.io/Data/Home/whatsnew.json; echo 'going to sleep'; start-sleep -s 600;
           ports:
             - name: {{ $portName }}
               containerPort: 80
