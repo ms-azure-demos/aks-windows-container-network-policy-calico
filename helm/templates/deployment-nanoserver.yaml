@@ -1,24 +1,19 @@
-{{- $portName := include "syntheticapi.portName" . -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: network-policy-test-dep
   namespace: {{ .Values.namespace}}
   labels:
-    {{- include "syntheticapi.labels" . | nindent 4 }}
+    service: webapi
 spec:
   replicas: 1
   selector:
     matchLabels:
-      {{- include "syntheticapi.selectorLabels" . | nindent 6 }}
+      role: backend
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       labels:
-        {{- include "syntheticapi.selectorLabels" . | nindent 8 }}
+        role: backend
     spec:
       containers:
         - name: {{ .Chart.Name }}
@@ -28,10 +23,6 @@ spec:
           - pwsh
           - /c
           - echo 'starting'; curl https://joymon.github.io/Data/Home/whatsnew.json; echo 'going to sleep'; start-sleep -s 600;
-          ports:
-            - name: {{ $portName }}
-              containerPort: 80
-              protocol: TCP
           env:
             {{- toYaml .Values.env | nindent 12 }}
       {{- with .Values.nodeSelector }}

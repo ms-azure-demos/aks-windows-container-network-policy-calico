@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: test-network-policy
+  namespace: {{ .Values.namespace}}
+spec:
+  podSelector:
+    matchLabels:
+      role: backend
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 10.0.0.0/24
+        - ipBlock:
+            cidr: 185.199.108.153/32 # These are the IPs of 'nsloopup joymon.github.io' which is called by the container
+        - ipBlock:
+            cidr: 185.199.109.153/32
+        - ipBlock:
+            cidr: 185.199.110.153/32
+        - ipBlock:
+            cidr: 185.199.111.153/32
+      ports:
+        - protocol: TCP
+          port: 443
