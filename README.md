@@ -14,6 +14,13 @@
 - Manually add windows node pool as the above will be creating only Linux node pool
 - [Deploy the HELM chart](./commands/11-app-deploy-helm.ps1)
 
+By default it will make http calls
+
+## Reproduce error
+- Change the [network-policy.yml](./helm/templates/network-policy.yml) to remove github IPs
+- Deploy HELM chart again
+- This will not restart the container. So better delete the pod.
+
 # How the PoC structured
 
 - The container is running a command that makes web request to [joymon.github.io](joymon.github.io)
