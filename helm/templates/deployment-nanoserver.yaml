@@ -22,7 +22,7 @@ spec:
           args:
           - pwsh
           - /c
-          - echo 'starting'; curl https://joymon.github.io/Data/Home/whatsnew.json; echo 'going to sleep'; start-sleep -s 600;
+          - echo 'starting';ipconfig /all; curl https://joymon.github.io/Data/Home/whatsnew.json; echo 'going to sleep'; start-sleep -s 600;
           env:
             {{- toYaml .Values.env | nindent 12 }}
       {{- with .Values.nodeSelector }}

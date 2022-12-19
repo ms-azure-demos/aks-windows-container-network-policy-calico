@@ -12,7 +12,7 @@ spec:
   egress:
     - to:
         - ipBlock:
-            cidr: 10.0.0.0/24
+            cidr: 10.0.0.0/8 # one of the IP is the DNS
         - ipBlock:
             cidr: 185.199.108.153/32 # These are the IPs of 'nsloopup joymon.github.io' which is called by the container
         - ipBlock:
